@@ -16,6 +16,8 @@ class WhatsAppService extends WhatsAppProxyService {
 
     if (this.isConnected && this.client) {
       console.log('✅ الواتساب متصل بالفعل');
+    }
+  }
 
   async sendSessionReport(sessionId) {
     try {
