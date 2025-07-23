@@ -247,7 +247,8 @@ export const StudentsManagement: React.FC = () => {
 
       {/* قائمة الطلاب */}
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* عرض الجدول على الشاشات الكبيرة */}
+        <div className="desktop-table overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -329,6 +330,69 @@ export const StudentsManagement: React.FC = () => {
               })}
             </tbody>
           </table>
+        </div>
+        
+        {/* عرض البطاقات على الموبايل */}
+        <div className="mobile-cards p-4">
+          {currentStudents.map((student) => {
+            const studentClass = classes.find(c => c.id === student.classId);
+            return (
+              <div key={student.id} className="mobile-card">
+                <div className="mobile-card-header">
+                  <div className="mobile-card-title">{student.name}</div>
+                  <div className="mobile-btn-group">
+                    <button
+                      onClick={() => {/* عرض تفاصيل الطالب */}}
+                      className="mobile-btn text-blue-600 hover:text-blue-900"
+                      title="عرض التفاصيل"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleEdit(student)}
+                      disabled={!hasPermission('studentsEdit')}
+                      className="mobile-btn text-green-600 hover:text-green-900"
+                      title="تعديل"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(student.id)}
+                      disabled={!hasPermission('studentsDelete')}
+                      className="mobile-btn text-red-600 hover:text-red-900"
+                      title="حذف"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="mobile-card-content">
+                  <div className="mobile-card-field">
+                    <div className="mobile-card-label">الكود</div>
+                    <div className="mobile-card-value">{student.barcode}</div>
+                  </div>
+                  <div className="mobile-card-field">
+                    <div className="mobile-card-label">الفصل</div>
+                    <div className="mobile-card-value">
+                      {studentClass?.name || (
+                        <span className="text-red-500">بدون فصل</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mobile-card-field">
+                    <div className="mobile-card-label">رقم ولي الأمر</div>
+                    <div className="mobile-card-value">{student.parentPhone}</div>
+                  </div>
+                  <div className="mobile-card-field">
+                    <div className="mobile-card-label">تاريخ الإضافة</div>
+                    <div className="mobile-card-value">
+                      {student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-GB') : 'غير محدد'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
         
         {/* Pagination */}

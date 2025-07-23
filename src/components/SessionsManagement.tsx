@@ -790,7 +790,8 @@ export const SessionsManagement: React.FC = () => {
 
       {/* قائمة الجلسات */}
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* عرض الجدول على الشاشات الكبيرة */}
+        <div className="desktop-table overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -929,6 +930,96 @@ export const SessionsManagement: React.FC = () => {
               })}
             </tbody>
           </table>
+        </div>
+        
+        {/* عرض البطاقات على الموبايل */}
+        <div className="mobile-cards p-4">
+          {currentSessions.map((session) => {
+            const sessionClass = classes.find(c => c.id === session.classId);
+            const sessionAttendance = attendance.filter(a => a.sessionId === session.id);
+            const presentCount = sessionAttendance.filter(a => a.status === 'present').length;
+            
+            return (
+              <div key={session.id} className="mobile-card">
+                <div className="mobile-card-header">
+                  <div className="mobile-card-title">{sessionClass?.name || 'غير محدد'}</div>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(session.status)}`}>
+                    {getStatusIcon(session.status)}
+                    <span className="mr-1">{getStatusText(session.status)}</span>
+                  </span>
+                </div>
+                <div className="mobile-card-content">
+                  <div className="mobile-card-field">
+                    <div className="mobile-card-label">وقت البداية</div>
+                    <div className="mobile-card-value">
+                      {(() => {
+                        try {
+                          const startTime = new Date(session.startTime);
+                          if (!isNaN(startTime.getTime())) {
+                            return startTime.toLocaleString('en-GB', {
+                              year: 'numeric', 
+                              month: '2-digit', 
+                              day: '2-digit', 
+                              hour: '2-digit', 
+                              minute: '2-digit',
+                              hour12: false
+                            });
+                          }
+                          return 'تاريخ غير صحيح';
+                        } catch (error) {
+                          return 'تاريخ غير صحيح';
+                        }
+                      })()}
+                    </div>
+                  </div>
+                  <div className="mobile-card-field">
+                    <div className="mobile-card-label">الحضور</div>
+                    <div className="mobile-card-value">{presentCount}/{sessionAttendance.length}</div>
+                  </div>
+                </div>
+                <div className="mobile-card-actions">
+                  {hasPermission('sessionsEdit') && (
+                  <button
+                    onClick={() => toggleSessionStatus(session.id)}
+                    className="mobile-btn text-blue-600 hover:text-blue-900 bg-blue-100 hover:bg-blue-200"
+                    title={session.status === 'active' ? 'تحويل إلى مكتملة' : 'تحويل إلى نشطة'}
+                  >
+                    {session.status === 'active' ? (
+                      <Square className="h-4 w-4" />
+                    ) : (
+                      <Play className="h-4 w-4" />
+                    )}
+                  </button>
+                  )}
+                  <button
+                    onClick={() => setShowSessionDetails(session.id)}
+                    className="mobile-btn text-blue-600 hover:text-blue-900"
+                    title="عرض التفاصيل"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  {hasPermission('sessionsEdit') && (
+                  <button
+                    onClick={() => handleEdit(session)}
+                    className="mobile-btn text-green-600 hover:text-green-900"
+                    title="تعديل"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </button>
+                  )}
+                  {hasPermission('sessionsDelete') && (
+                  <button
+                    onClick={() => handleDelete(session.id)}
+                    className="mobile-btn text-red-600 hover:text-red-900"
+                    title="حذف"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
         
         {/* Pagination */}
