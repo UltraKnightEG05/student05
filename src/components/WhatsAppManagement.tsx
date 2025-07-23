@@ -437,7 +437,7 @@ export const WhatsAppManagement: React.FC = () => {
 
           {activeTab === 'logs' && (
             <div className="space-y-4">
-              <div className="overflow-x-auto">
+              <div className="desktop-table overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
@@ -474,6 +474,45 @@ export const WhatsAppManagement: React.FC = () => {
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* عرض بطاقات للموبايل - سجل الرسائل */}
+              <div className="mobile-cards">
+                {/* بيانات تجريبية لسجل الرسائل */}
+                <div className="mobile-card">
+                  <div className="mobile-card-header">
+                    <div className="mobile-card-title">أحمد محمد علي</div>
+                    <div className="mobile-btn-group">
+                      <button className="mobile-btn text-blue-600 hover:text-blue-900" title="عرض">
+                        <Eye className="h-4 w-4" />
+                      </button>
+                      <button className="mobile-btn text-red-600 hover:text-red-900" title="حذف">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="mobile-card-content">
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">نوع الرسالة</div>
+                      <div className="mobile-card-value">غياب</div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">الحالة</div>
+                      <div className="mobile-card-value">
+                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                          تم التسليم
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">تاريخ الإرسال</div>
+                      <div className="mobile-card-value">
+                        {new Date().toLocaleString('en-GB')}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {whatsappLogs.length === 0 && (

@@ -275,7 +275,8 @@ export const ReportsManagement: React.FC = () => {
 
         <div className="overflow-x-auto">
           {selectedReport === 'attendance' ? (
-            <table className="w-full">
+            <div className="desktop-table">
+              <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">اسم الطالب</th>
@@ -302,9 +303,50 @@ export const ReportsManagement: React.FC = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
+            
+            {/* عرض بطاقات للموبايل - تقرير الحضور */}
+            <div className="mobile-cards">
+              {reportData.map((row, index) => (
+                <div key={index} className="mobile-card">
+                  <div className="mobile-card-header">
+                    <div className="mobile-card-title">{row.student_name}</div>
+                    <div className="text-sm text-gray-600">{row.class_name}</div>
+                  </div>
+                  
+                  <div className="mobile-card-content">
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">إجمالي الجلسات</div>
+                      <div className="mobile-card-value">{row.total_sessions}</div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">حاضر</div>
+                      <div className="mobile-card-value text-green-600">{row.present_count}</div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">غائب</div>
+                      <div className="mobile-card-value text-red-600">{row.absent_count}</div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">متأخر</div>
+                      <div className="mobile-card-value text-yellow-600">{row.late_count}</div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">معذور</div>
+                      <div className="mobile-card-value text-blue-600">{row.excused_count}</div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">نسبة الحضور</div>
+                      <div className="mobile-card-value font-bold">{row.attendance_rate}%</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
-            <table className="w-full">
+            <div className="desktop-table">
+              <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">اسم الطالب</th>
@@ -394,7 +436,86 @@ export const ReportsManagement: React.FC = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
+            
+            {/* عرض بطاقات للموبايل - تقرير الأداء */}
+            <div className="mobile-cards">
+              {reportData.map((row, index) => (
+                <div key={index} className="mobile-card">
+                  <div className="mobile-card-header">
+                    <div className="mobile-card-title">{row.student_name}</div>
+                    <div className="text-sm text-gray-600">{row.class_name} - {row.subject_name}</div>
+                  </div>
+                  
+                  <div className="mobile-card-content">
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">كود الطالب</div>
+                      <div className="mobile-card-value">{row.student_barcode || '-'}</div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">المعلم</div>
+                      <div className="mobile-card-value">{row.teacher_name || '-'}</div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">تاريخ الجلسة</div>
+                      <div className="mobile-card-value">
+                        {row.session_date ? new Date(row.session_date).toLocaleDateString('en-GB') : '-'}
+                      </div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">تقييم المعلم</div>
+                      <div className="mobile-card-value">
+                        {row.teacher_rating ? (
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            row.teacher_rating >= 4 ? 'bg-green-100 text-green-800' :
+                            row.teacher_rating >= 3 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {row.teacher_rating}/5
+                          </span>
+                        ) : '-'}
+                      </div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">درجة الاختبار</div>
+                      <div className="mobile-card-value">
+                        {row.quiz_score ? (
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            row.quiz_score >= 80 ? 'bg-green-100 text-green-800' :
+                            row.quiz_score >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {row.quiz_score}%
+                          </span>
+                        ) : '-'}
+                      </div>
+                    </div>
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">المشاركة</div>
+                      <div className="mobile-card-value">
+                        {row.participation ? (
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            row.participation >= 4 ? 'bg-green-100 text-green-800' :
+                            row.participation >= 3 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {row.participation}/5
+                          </span>
+                        ) : '-'}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {row.comments && (
+                    <div className="mt-3 p-2 bg-gray-50 rounded">
+                      <div className="text-xs text-gray-600 mb-1">التعليقات:</div>
+                      <div className="text-sm text-gray-800">{row.comments}</div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </div>
 

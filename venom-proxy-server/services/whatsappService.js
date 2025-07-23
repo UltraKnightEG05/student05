@@ -101,7 +101,7 @@ class WhatsAppService {
           debug: process.env.WHATSAPP_DEBUG === 'true',
           logQR: true,
           puppeteerOptions: {
-            headless: process.env.WHATSAPP_HEADLESS === 'true' ? 'new' : false,
+            headless: process.env.WHATSAPP_HEADLESS === 'true' ? false : false, // إجبار false مؤقتاً
             args: [
               '--no-sandbox',
               '--disable-setuid-sandbox',
@@ -129,13 +129,20 @@ class WhatsAppService {
               '--disable-sync',
               '--disable-translate',
               '--hide-scrollbars',
-              '--disable-notifications'
+              '--disable-notifications',
+              '--disable-extensions-except',
+              '--disable-plugins-discovery',
+              '--no-first-run',
+              '--disable-default-apps',
+              '--disable-popup-blocking'
             ],
             executablePath: process.env.CHROME_PATH,
             defaultViewport: null,
             ignoreHTTPSErrors: true,
+            ignoreDefaultArgs: ['--disable-extensions'],
             slowMo: 0,
-            timeout: 120000
+            timeout: 60000,
+            protocolTimeout: 60000
           },
           autoClose: parseInt(process.env.WHATSAPP_AUTO_CLOSE) || 0,
           createPathFileToken: true,

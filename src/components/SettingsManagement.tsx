@@ -277,7 +277,8 @@ export const SettingsManagement: React.FC = () => {
 
           {/* عرض البيانات */}
           {activeTab === 'locations' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="desktop-table">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(currentItems as typeof filteredLocations).map((location) => (
                 <div key={location.id} className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
                   <div className="flex items-center justify-between mb-3">
@@ -327,9 +328,70 @@ export const SettingsManagement: React.FC = () => {
                   </div>
                 </div>
               ))}
+              </div>
+            </div>
+            
+            {/* عرض بطاقات للموبايل - الأماكن */}
+            <div className="mobile-cards">
+              {(currentItems as typeof filteredLocations).map((location) => (
+                <div key={location.id} className="mobile-card">
+                  <div className="mobile-card-header">
+                    <div className="mobile-card-title flex items-center">
+                      <MapPin className="h-5 w-5 ml-2 text-blue-600" />
+                      {location.name}
+                    </div>
+                    <div className="mobile-btn-group">
+                      {hasPermission('settingsEdit') && (
+                      <button
+                        onClick={() => handleEdit(location)}
+                        className="mobile-btn text-green-600 hover:text-green-900"
+                        title="تعديل"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      )}
+                      {hasPermission('settingsEdit') && (
+                      <button
+                        onClick={() => handleDelete(location.id)}
+                        className="mobile-btn text-red-600 hover:text-red-900"
+                        title="حذف"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="mobile-card-content">
+                    {location.roomNumber && (
+                      <div className="mobile-card-field">
+                        <div className="mobile-card-label">رقم القاعة</div>
+                        <div className="mobile-card-value">{location.roomNumber}</div>
+                      </div>
+                    )}
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">السعة</div>
+                      <div className="mobile-card-value">{location.capacity || 30} طالب</div>
+                    </div>
+                    {location.description && (
+                      <div className="mobile-card-field">
+                        <div className="mobile-card-label">الوصف</div>
+                        <div className="mobile-card-value">{location.description}</div>
+                      </div>
+                    )}
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">تاريخ الإضافة</div>
+                      <div className="mobile-card-value">
+                        {location.createdAt ? new Date(location.createdAt).toLocaleDateString('en-GB') : 'غير محدد'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="desktop-table">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(currentItems as typeof filteredSubjects).map((subject) => (
                 <div key={subject.id} className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
                   <div className="flex items-center justify-between mb-3">
@@ -367,6 +429,56 @@ export const SettingsManagement: React.FC = () => {
                     )}
                     <div>
                       <span className="font-medium">تاريخ الإضافة:</span> {subject.createdAt ? new Date(subject.createdAt).toLocaleDateString('en-GB') : 'غير محدد'}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              </div>
+            </div>
+            
+            {/* عرض بطاقات للموبايل - المواد */}
+            <div className="mobile-cards">
+              {(currentItems as typeof filteredSubjects).map((subject) => (
+                <div key={subject.id} className="mobile-card">
+                  <div className="mobile-card-header">
+                    <div className="mobile-card-title flex items-center">
+                      <BookOpen className="h-5 w-5 ml-2 text-green-600" />
+                      {subject.name}
+                    </div>
+                    <div className="mobile-btn-group">
+                      {hasPermission('settingsEdit') && (
+                      <button
+                        onClick={() => handleEdit(subject)}
+                        className="mobile-btn text-green-600 hover:text-green-900"
+                        title="تعديل"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      )}
+                      {hasPermission('settingsEdit') && (
+                      <button
+                        onClick={() => handleDelete(subject.id)}
+                        className="mobile-btn text-red-600 hover:text-red-900"
+                        title="حذف"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="mobile-card-content">
+                    {subject.description && (
+                      <div className="mobile-card-field">
+                        <div className="mobile-card-label">الوصف</div>
+                        <div className="mobile-card-value">{subject.description}</div>
+                      </div>
+                    )}
+                    <div className="mobile-card-field">
+                      <div className="mobile-card-label">تاريخ الإضافة</div>
+                      <div className="mobile-card-value">
+                        {subject.createdAt ? new Date(subject.createdAt).toLocaleDateString('en-GB') : 'غير محدد'}
+                      </div>
                     </div>
                   </div>
                 </div>

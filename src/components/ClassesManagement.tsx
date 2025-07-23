@@ -438,7 +438,8 @@ export const ClassesManagement: React.FC = () => {
       </div>
 
       {/* قائمة الفصول */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="desktop-table">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentClasses.map((cls) => {
           const classStudents = students.filter(s => s.classId === cls.id);
           const teacherDisplayName = cls.teacherId ? getTeacherDisplayName(cls.teacherId) : 'غير محدد';
@@ -514,8 +515,94 @@ export const ClassesManagement: React.FC = () => {
             </div>
           );
         })}
+        </div>
       </div>
 
+      {/* عرض بطاقات للموبايل */}
+      <div className="mobile-cards">
+        {currentClasses.map((cls) => {
+          const classStudents = students.filter(s => s.classId === cls.id);
+          const teacherDisplayName = cls.teacherId ? getTeacherDisplayName(cls.teacherId) : 'غير محدد';
+          
+          return (
+            <div key={cls.id} className="mobile-card">
+              <div className="mobile-card-header">
+                <div className="mobile-card-title">{cls.name}</div>
+                <div className="mobile-btn-group">
+                  <button
+                    onClick={() => setShowClassDetails(cls.id)}
+                    className="mobile-btn text-blue-600 hover:text-blue-900"
+                    title="عرض التفاصيل"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  {hasPermission('classesEdit') && (
+                  <button
+                    onClick={() => handleEdit(cls)}
+                    className="mobile-btn text-green-600 hover:text-green-900"
+                    title="تعديل"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </button>
+                  )}
+                  {hasPermission('classesDelete') && (
+                  <button
+                    onClick={() => handleDelete(cls.id)}
+                    className="mobile-btn text-red-600 hover:text-red-900"
+                    title="حذف"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                  )}
+                </div>
+              </div>
+              
+              <div className="mobile-card-content">
+                <div className="mobile-card-field">
+                  <div className="mobile-card-label">عدد الطلاب</div>
+                  <div className="mobile-card-value">{classStudents.length}/{cls.maxCapacity}</div>
+                </div>
+                <div className="mobile-card-field">
+                  <div className="mobile-card-label">المعلم</div>
+                  <div className="mobile-card-value">{cls.teacherName || 'غير محدد'}</div>
+                </div>
+                <div className="mobile-card-field">
+                  <div className="mobile-card-label">نسبة الامتلاء</div>
+                  <div className="mobile-card-value">
+                    {cls.maxCapacity > 0 ? ((classStudents.length / cls.maxCapacity) * 100).toFixed(1) : 0}%
+                  </div>
+                </div>
+                <div className="mobile-card-field">
+                  <div className="mobile-card-label">تاريخ الإنشاء</div>
+                  <div className="mobile-card-value">
+                    {cls.createdAt ? new Date(cls.createdAt).toLocaleDateString('en-GB') : 'غير محدد'}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mobile-card-actions">
+                <button
+                  onClick={() => generateClassBarcodes(cls.id)}
+                  className="mobile-btn bg-green-100 text-green-800 hover:bg-green-200"
+                  disabled={classStudents.length === 0}
+                >
+                  <Printer className="h-3 w-3 inline ml-1" />
+                  طباعة الباركودات
+                </button>
+              </div>
+              
+              <div className="mt-2">
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${cls.maxCapacity > 0 ? (classStudents.length / cls.maxCapacity) * 100 : 0}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center space-x-4 space-x-reverse mt-6">

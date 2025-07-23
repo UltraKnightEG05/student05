@@ -201,7 +201,7 @@ export const TeachersManagement: React.FC = () => {
       </div>
 
       {/* قائمة المعلمين */}
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm border overflow-hidden desktop-table">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
@@ -346,6 +346,58 @@ export const TeachersManagement: React.FC = () => {
             </div>
           </div>
         )}
+      </div>
+
+      {/* عرض بطاقات للموبايل */}
+      <div className="mobile-cards">
+        {currentTeachers.map((teacher) => (
+          <div key={teacher.id} className="mobile-card">
+            <div className="mobile-card-header">
+              <div className="mobile-card-title">{teacher.name}</div>
+              <div className="mobile-btn-group">
+                {hasPermission('teachersEdit') && (
+                <button
+                  onClick={() => handleEdit(teacher)}
+                  className="mobile-btn text-green-600 hover:text-green-900"
+                  title="تعديل"
+                >
+                  <Edit className="h-4 w-4" />
+                </button>
+                )}
+                {hasPermission('teachersDelete') && (
+                <button
+                  onClick={() => handleDelete(teacher.id)}
+                  className="mobile-btn text-red-600 hover:text-red-900"
+                  title="حذف"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+                )}
+              </div>
+            </div>
+            
+            <div className="mobile-card-content">
+              <div className="mobile-card-field">
+                <div className="mobile-card-label">المادة</div>
+                <div className="mobile-card-value">{teacher.subjectName || 'غير محدد'}</div>
+              </div>
+              <div className="mobile-card-field">
+                <div className="mobile-card-label">رقم الهاتف</div>
+                <div className="mobile-card-value">{teacher.phone || 'غير محدد'}</div>
+              </div>
+              <div className="mobile-card-field">
+                <div className="mobile-card-label">البريد الإلكتروني</div>
+                <div className="mobile-card-value">{teacher.email || 'غير محدد'}</div>
+              </div>
+              <div className="mobile-card-field">
+                <div className="mobile-card-label">تاريخ الإضافة</div>
+                <div className="mobile-card-value">
+                  {teacher.createdAt ? new Date(teacher.createdAt).toLocaleDateString('en-GB') : 'غير محدد'}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {currentTeachers.length === 0 && (

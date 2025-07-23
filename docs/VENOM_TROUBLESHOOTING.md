@@ -40,6 +40,7 @@ Warning: The usage of "headless: true" is deprecated
 **الأعراض:**
 - الخادم يعمل لكن لا يظهر QR Code
 - يتوقف عند "initWhatsapp"
+- خطأ "Target closed" أو "Protocol error"
 
 **الحلول:**
 
@@ -51,11 +52,11 @@ WHATSAPP_HEADLESS=false
 
 #### الحل 2: تنظيف وإعادة التثبيت
 ```bash
-# تشغيل سكريبت الإصلاح
-node scripts/fix-venom.js
+# إصلاح مشاكل Chrome
+npm run fix:chrome
 
-# إعادة التثبيت
-npm install
+# تشغيل بدون nodemon
+npm run start:clean
 
 # تشغيل اختبار Chrome
 node scripts/test-chrome.js
@@ -65,6 +66,20 @@ node scripts/test-chrome.js
 ```bash
 npm uninstall venom-bot
 npm install venom-bot@4.0.0
+```
+
+#### الحل 4: إصلاح مشكلة "Target closed"
+```bash
+# إغلاق جميع عمليات Chrome
+taskkill /F /IM chrome.exe
+taskkill /F /IM chromium.exe
+
+# تنظيف التوكن
+rm -rf tokens/
+mkdir tokens
+
+# تشغيل بدون nodemon
+npm run start:clean
 ```
 
 ### 4. مشكلة Chrome Path
